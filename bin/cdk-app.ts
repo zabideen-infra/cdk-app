@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { HelloWorldApp } from '../dist/lib/app/cdk-app-stack';
+import { HelloWorldApp } from '../lib/cdk-app-stack';
 
 import {
     Tags
