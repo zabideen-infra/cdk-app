@@ -2,8 +2,6 @@ import { Construct } from 'constructs';
 
 import {
     aws_s3 as s3,
-    aws_cloudfront as cloudfront,
-    aws_cloudfront_origins as origins,
     aws_s3_deployment as s3Deploy
 } from 'aws-cdk-lib';
 import path from 'path';

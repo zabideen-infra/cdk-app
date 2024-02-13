@@ -22,7 +22,12 @@ export class LambdaApiGateway extends Construct {
             runtime: lambda.Runtime.NODEJS_20_X,
             handler: 'helloWorld',
             functionName: 'hello-world',
-            entry: path.join(__dirname, '..', 'src', 'hello-world', 'index.js')
+            entry: path.join(__dirname, '..', 'src', 'hello-world', 'index.js'),
+            bundling: {
+                externalModules: [
+                    'aws-lambda'
+                ]
+            }
         })
 
         const lambdaApiIntegration = new HttpLambdaIntegration('HelloWorldIntegration', helloWorldLambda);

@@ -1,17 +1,42 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as CdkApp from '../lib/cdk-app-stack';
+import * as cdk from 'aws-cdk-lib';
+import { Stack } from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/cdk-app-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new CdkApp.CdkAppStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+import { HelloWorldApp } from '../dist/lib/lib/cdk-app-stack';
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+
+const app = new cdk.App();
+
+const applicationStack = new Stack(new HelloWorldApp(app, "TestApplicationStack"));
+const applicationTemplate = Template.fromStack(applicationStack);
+
+
+test("lambda runtime and handler check", () => {
+    applicationTemplate.hasResourceProperties(
+        "AWS::Lambda::Function", {
+            Runtime: "nodejs20.x",
+            Handler: "index.helloWorld"
+        }
+    )
+})
+
+test("lambda function count", () => {
+    applicationTemplate.resourceCountIs(
+        "AWS::Lambda::Function",
+        2
+    )
 });
+
+test("api gateway count", () => {
+    applicationTemplate.resourceCountIs(
+        "AWS::ApiGatewayV2::Api",
+        1
+    )
+})
+
+test("s3 bucket count", () => {
+    applicationTemplate.resourceCountIs(
+        "AWS::S3::Bucket",
+        1
+    )
+})

@@ -1,20 +1,31 @@
-> npm run build
+#### Install dependencies
 
-> npm run synth
+`npm i`
 
-> cdk deploy
+#### Run Linting
 
-# Welcome to your CDK TypeScript project
+`npm run lint`
 
-This is a blank project for CDK development with TypeScript.
+#### Build typescript code
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+```
+pushd lib/src/hello-world/
+npm i
+popd
+```
 
-## Useful commands
+#### Build the Code
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+`npm run build`
+
+#### Run tests
+
+`npm run test`
+
+#### Generate CF templates
+
+`npm run synth`
+
+#### Deploy stack
+
+`npm run deploy`

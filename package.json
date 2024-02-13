@@ -2,14 +2,16 @@
   "name": "cdk-app",
   "version": "0.1.0",
   "bin": {
-    "cdk-app": "bin/cdk-app.js"
+    "cdk-app": "dist/lib/bin/cdk-app.js"
   },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "synth": "cdk synth --output build/cdk/.out",
+    "deploy": "cdk deploy"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
