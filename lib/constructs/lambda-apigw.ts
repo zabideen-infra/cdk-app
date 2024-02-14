@@ -4,13 +4,11 @@ import * as cdk from 'aws-cdk-lib';
 import {
     aws_lambda_nodejs as lambda_nodejs,
     aws_lambda as lambda,
-    aws_apigatewayv2 as apigwv2
+    aws_apigateway as apigw,
+    aws_iam as iam
 } from 'aws-cdk-lib';
 
-import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
-
 import path from 'path';
-import { ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 
 
 export class LambdaApiGateway extends Construct {
@@ -30,36 +28,44 @@ export class LambdaApiGateway extends Construct {
             }
         })
 
-        const lambdaApiIntegration = new HttpLambdaIntegration('HelloWorldIntegration', helloWorldLambda);
-        const helloWorldApi = new apigwv2.HttpApi(this, 'helloWorldApi', {
-            apiName: 'hello-world-api',
-            createDefaultStage: true,
-            corsPreflight: {
-                allowMethods: [
-                    apigwv2.CorsHttpMethod.GET
-                ],
-                allowOrigins: [
-                    '*'
-                ]
-            }
+        const lambdaAllowStatement = new iam.PolicyStatement({
+            actions: [
+                "execute-api:Invoke"
+            ],
+            effect: iam.Effect.ALLOW,
+            principals: [
+                new iam.AccountRootPrincipal()
+            ],
+            resources: [
+                "execute-api:/*"
+            ]
+        })
+
+        const apigwPolicyDocument = new iam.PolicyDocument({
+            statements: [
+                lambdaAllowStatement
+            ]
+        })
+
+        const helloWorldApi = new apigw.RestApi(this, 'helloWorldApi', {
+            restApiName: "hello-world-api",
+            endpointTypes: [
+                apigw.EndpointType.PRIVATE
+            ],
+            policy: apigwPolicyDocument
         });
-        
-        helloWorldApi.addRoutes({
-          path: '/',
-          methods: [
-            apigwv2.HttpMethod.GET
-        ],
-          integration: lambdaApiIntegration,
-        });
+
+        const lambdaIntegration = new apigw.LambdaIntegration(helloWorldLambda);
+        const getResource = helloWorldApi.root.addResource("hello");
+        getResource.addMethod(
+            "GET",
+            lambdaIntegration
+        )
 
         new cdk.CfnOutput(this, 'APIEndpoint', {
             value: helloWorldApi.url!,
             exportName: 'APIEndpoint'
         })
 
-        helloWorldLambda.addPermission('APIGWInvocation', {
-            principal: new ServicePrincipal('apigateway.amazonaws.com'),
-            sourceArn: helloWorldApi.arnForExecuteApi('*')
-        });
     }
 }

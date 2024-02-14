@@ -29,7 +29,7 @@ test("lambda function count", () => {
 
 test("api gateway count", () => {
     applicationTemplate.resourceCountIs(
-        "AWS::ApiGatewayV2::Api",
+        "AWS::ApiGateway::RestApi",
         1
     )
 })

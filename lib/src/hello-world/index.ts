@@ -1,13 +1,20 @@
 import {
-    APIGatewayProxyEventV2,
+    APIGatewayProxyEvent,
     Context
 } from 'aws-lambda';
 
 export const helloWorld = async(
-    event: APIGatewayProxyEventV2,
+    event: APIGatewayProxyEvent,
     context: Context
 ) => {
     console.log(event)
     console.log(context)
-    return "hello world";
+    const res = {
+        statusCode: 200,
+        headers: {
+            "Content-Type": "*/*"
+        },
+        body: JSON.stringify("Hello World")
+    };
+    return res
 };
